@@ -18,7 +18,7 @@ def start():
 def send(fromConnection):
     try:
         while(True):
-            data=fromConnection.rec(4096)
+            data=fromConnection.recv(4096)
             for cl in client:
                 if cl != fromConnection:
                     cl.send(data)
