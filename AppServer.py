@@ -8,7 +8,7 @@ print(f"Hostname: {hostname}")
 print(f"IP Address: {ip_address}:{port}")
 
 server=socket.socket()
-server.bind((ip_address,port))
+server.bind(('0.0.0.0',port))
 server.listen(5)
 clients=[]
 def start():
