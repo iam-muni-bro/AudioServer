@@ -1,28 +1,32 @@
 import socket
 import threading
 
+hostname = socket.gethostname()
+ip_address = socket.gethostbyname(hostname)
 port=5000
-host="0.0.0.0"
+print(f"Hostname: {hostname}")
+print(f"IP Address: {ip_address}:{port}")
+
 server=socket.socket()
-server.bind((host,port))
+server.bind((ip_address,port))
 server.listen(5)
-client=[]
+clients=[]
 def start():
     while(True):
         print("Server started ...")
-        conn,addr =server.accept()
-        client.append(conn)
-        print(f"Connection Accepted")
-        t = threading.Thread(target=send,args=(conn,))
+        _connection,_ipAddress=server.accept()
+        clients.append(_connection)
+        print("Connection Accepted")
+        t = threading.Thread(target=send,args=(_connection,_ipAddress))
         t.start()
-def send(fromConnection):
+def send(fromConnection,ipAdress):
     try:
         while(True):
             data=fromConnection.recv(4096)
-            for cl in client:
-                if cl != fromConnection:
-                    cl.send(data)
-    except:
-        print("Client Disconnected")
-
+            for client in clients:
+                if client != fromConnection:
+                    client.send(data)
+    except Exception as e:
+        print("Client Disconnected",e)
+        
 start()
